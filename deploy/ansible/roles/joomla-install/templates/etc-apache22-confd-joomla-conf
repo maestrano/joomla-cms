@@ -10,8 +10,8 @@ ServerName {{ server_hostname }}
     Allow from all
   </Directory>
   
-  ErrorLog /var/log/apache2/joomlacrm_error.log
+  ErrorLog /var/log/apache2/joomla_error.log
   LogLevel warn
-  CustomLog /var/log/apache2/joomlacrm_access.log combined
+  CustomLog /var/log/apache2/joomla_access.log combined
   ServerSignature Off
 </VirtualHost>

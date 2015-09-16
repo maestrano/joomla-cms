@@ -2,7 +2,7 @@
 joomla_db_user: joomla
 joomla_db_password: joomla
 joomla_db_name: joomla
-joomla_root_path: /var/lib/joomlacrm/webapp/
+joomla_root_path: /var/lib/joomla/webapp/
 
 # vTiger default configuration
 sso_enabled: "false"
