@@ -1,0 +1,27 @@
+{
+    "environment": "local",
+    "app": {
+        "host": "http://joomla.app.dev.maestrano.io"
+    },
+    "api": {
+        "id": "api_key",
+        "key": "api_secret",
+        "group_id": "joomla.app.dev.maestrano.io"
+    },
+    "sso": {
+        "enabled": true,
+        "slo_enabled": true,
+        "init_path": "/maestrano/auth/saml/init.php",
+        "consume_path": "/maestrano/auth/saml/consume.php",
+        "creation_mode": "virtual"
+    },
+    "connec": {
+      "enabled": false
+    },
+    "webhook": {
+        "account": {
+            "groupsPath": "/maestrano/account/groups/:id",
+            "groupUsersPath": "/maestrano/account/groups/:group_id/users/:id"
+        }
+    }
+}

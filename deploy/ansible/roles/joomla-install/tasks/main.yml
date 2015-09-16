@@ -1,0 +1,136 @@
+# Include joomla specific configuration
+- include_vars: "{{ item }}"
+  with_items:
+    - joomla.yml
+    - version.yml
+  tags:
+    - configuration
+    - update
+
+- name: General | Install Application packages
+  apt: "name={{ item }} state=present"
+  with_items:
+    - git
+    - curl
+
+- name: Joomla! | Ensure MySQL is running
+  command: service mysql start
+  ignore_errors: yes
+  tags:
+    - configuration
+
+- name: Joomla! | Create Joomla! database
+  mysql_db:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    db: "{{ joomla_db_name }}"
+    state: present
+
+- name: Joomla! | Create Joomla! database user
+  mysql_user:
+    name: "{{ joomla_db_user }}"
+    password: "{{ joomla_db_password }}"
+    priv: "{{ joomla_db_name }}.*:ALL,GRANT"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Joomla! | Download application from Github
+  sudo: false
+  git:
+    repo: "https://github.com/{{ application_repository }}/joomla-cms.git"
+    dest: "{{ joomla_root_path }}"
+    version: "{{ application_version }}"
+    accept_hostkey: yes
+    ssh_opts: "-o StrictHostKeyChecking=no"
+    update: yes
+    force: yes
+  tags:
+    - update
+
+- name: Joomla! | Current commit hash
+  shell: 'git log -n 1 --pretty=format:"%H" > {{ joomla_root_path }}/.git-version'
+  args:
+    chdir: "{{ joomla_root_path }}"
+  tags:
+    - update
+
+- name: Git | Ignore files permissions changes
+  command: "git config core.filemode false chdir={{ joomla_root_path }}"
+  tags:
+    - update
+
+- name: Ansible | Update scripts
+  copy:
+    src: "{{ joomla_root_path }}/deploy/ansible"
+    dest: /etc/
+  tags:
+    - update
+
+- name: Joomla! | Configure Apache virtual host
+  template: 
+    src: etc-apache24-confd-joomla-conf
+    dest: /etc/apache2/sites-available/joomlacrm.conf
+    owner: root
+    mode: 755
+  tags:
+    - configuration
+
+- name: Joomla! | Enable Apache virtual host 
+  file: src=/etc/apache2/sites-available/joomlacrm.conf dest=/etc/apache2/sites-enabled/joomlacrm.conf state=link
+  tags:
+    - configuration
+
+- name: Apache | Restart the Apache service
+  service: 
+    name: apache2 
+    state: restarted
+
+- name: Joomla! | Configuration file joomla-configuration.php
+  template: 
+    src: joomla-configuration.php
+    dest: "{{ joomla_root_path }}/configuration.php"
+    owner: root
+    mode: 755
+  tags:
+    - configuration
+
+- name: Joomla! | Configuration file maestrano.json
+  template: 
+    src: joomla-maestrano.json
+    dest: "{{ joomla_root_path }}/maestrano.json"
+    owner: www-data
+    group: www-data
+    mode: 777
+  tags:
+    - configuration
+
+- name: Joomla! | Setup Joomla! database
+  shell: "mysql {{ joomla_db_name }} -u{{ joomla_db_user }} -p{{ joomla_db_password }} < {{ item }}"
+  with_items:
+    - maestrano/app/db/0_base_schema.sql
+    - maestrano/app/db/1_add_mno_uid_field.sql
+  args:
+    chdir: "{{ joomla_root_path }}"
+
+- name: Joomla! | Set file permissions
+  file:
+    path: "{{ joomla_root_path }}"
+    mode: 0755
+    owner: www-data
+    group: www-data
+    state: directory
+    recurse: yes
+  tags:
+    - configuration
+
+- name: Joomla! | Set log files permissions
+  file:
+    path: /var/log/apache2
+    mode: 0755
+    owner: www-data
+    group: www-data
+    state: directory
+    recurse: yes
+  tags:
+    - configuration
