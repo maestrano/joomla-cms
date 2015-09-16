@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.4.4" type="plugin" group="authentication">
+  <name>Authentication - Maestrano</name>
+  <author>Maestrano</author>
+  <creationDate>September 2015</creationDate>
+  <copyright>Copyright (C) 2015 Maestrano Pty. Ltd. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+  <authorEmail>support@maestrano.com</authorEmail>
+  <authorUrl>www.maestrano.com</authorUrl>
+	<version>3.4.4</version>
+  <description>Give you secure one-click access to Joomla! via your Maestrano account</description>
+	<files>
+    <filename plugin="maestrano">maestrano.php</filename>
+    <filename>index.html</filename>
+	</files>
+  <config/>
+</extension>
