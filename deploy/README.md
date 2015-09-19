@@ -20,11 +20,11 @@ docker run -it \
   -e "MNO_POWER_UNITS=4" \
   --add-host application.maestrano.io:172.17.42.1 \
   --add-host connec.maestrano.io:172.17.42.1 \
-  maestrano/joomla:latest
+  maestrano/joomla-cms:latest
  ```
 
 ## Docker Hub
-The image can be pulled down from [Docker Hub](https://registry.hub.docker.com/u/maestrano/joomla/)
-**maestrano/Jjoomla:stable**: Production version
+The image can be pulled down from [Docker Hub](https://registry.hub.docker.com/u/maestrano/joomla-cms/)
+**maestrano/joomla-cms:stable**: Production version
 
-**maestrano/joomla:latest**: Develomment version
+**maestrano/joomla-cms:latest**: Develomment version
