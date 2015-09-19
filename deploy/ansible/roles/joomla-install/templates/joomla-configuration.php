@@ -17,7 +17,7 @@ class JConfig {
 	public $password = '{{ joomla_db_password }}';
 	public $db = '{{ joomla_db_name }}';
 	public $dbprefix = 'j_';
-	public $live_site = '';
+	public $live_site = 'http://{{ server_hostname }}';
 	public $secret = 'r4r0ihLd7wkJVFa3';
 	public $gzip = '0';
 	public $error_reporting = 'default';
