@@ -149,28 +149,32 @@ class MnoSsoUser extends Maestrano_Sso_User
   }
   
   /**
-   * Return the role to give to the user based on context
-   * If the user is the owner of the app or at least Admin
-   * for each organization, then it is given the role of 'Admin'.
-   * Return 'User' role otherwise
+   * Role to be given to the user is based on the table j_usergroups
+   * Minimum level of access required to get Admin access is 6: Manager
+   * 1  Public
+   * 2  Registered
+   * 3  Author
+   * 4  Editor
+   * 5  Publisher
+   * 6  Manager
+   * 7  Administrator
+   * 8  Super Users
+   * 9  Guest
    *
    * @return the ID of the user created, null otherwise
    */
   public function getRoleToAssign() {
-    $default_user_role = Array();
-    $default_admin_role = Array(8);
-
     switch($this->getGroupRole()) {
       case 'Member':
-        return $default_user_role;
+        return Array(6);
       case 'Power User':
-        return $default_user_role;
+        return Array(6);
       case 'Admin':
-        return $default_admin_role;
+        return Array(7);
       case 'Super Admin':
-        return $default_admin_role;
+        return Array(8);
       default:
-        return $default_user_role;
+        return Array(1);
     }
   }
   
